@@ -1,0 +1,16 @@
+.testR {
+  border:1px solid red;
+}
+
+.testB {
+  border:1px solid black;
+}
+
+body {
+  text-align: center;
+}
+
+#die-holder {
+  height:100px;
+  width:100px;
+}
