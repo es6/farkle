@@ -17,6 +17,7 @@ functions:
 const COMBO_KEY = {
   1: 100,
   5: 50,
+  tri_1: 300,
   tri_2: 200,
   tri_3: 300,
   tri_4: 400,
@@ -51,6 +52,16 @@ function roll(numOfDie) {
   return rolls;
 }
 
+function calculate1sAnd5s (arr, translatedCombo) {
+  arr.forEach(index => {
+    if (index == 1) {
+      translatedCombo.push(1);
+    } else if (index == 5) {
+      translatedCombo.push(5);
+    }
+  });
+}
+
 function translateDieToCombos(arr) {
   // arr = [2,2,2,1,1,3]
   // output: ["tri_2",1,1]
@@ -68,7 +79,7 @@ function translateDieToCombos(arr) {
 
   let rollLength = arr.length;
   arr.forEach(num => {
-    rollCount[num]++;
+    rollCount[num] += 1;
   });
   // returns {1: 1, 2:3, ...}
 
@@ -81,21 +92,22 @@ function translateDieToCombos(arr) {
   Object.keys(rollCount).forEach(key => {
     switch (rollCount[key]) {
       case 1:
-        singleHolder.push(rollCount[key]);
+        singleHolder.push(key);
+        break;
       case 2:
-        pairHolder.push(rollCount[key]);
+        pairHolder.push(key);
         break;
       case 3:
-        tripleHolder.push(rollCount[key]);
+        tripleHolder.push(key);
         break;
       case 4:
-        quadHolder.push(rollCount[key]);
+        quadHolder.push(key);
         break;
       case 5:
-        fiveHolder.push(rollCount[key]);
+        fiveHolder.push(key);
         break;
       case 6:
-        sixHolder.push(rollCount[key]);
+        sixHolder.push(key);
         break;
     }
   });
@@ -103,22 +115,50 @@ function translateDieToCombos(arr) {
   if (sixHolder.length != 1) {
     if (fiveHolder.length != 1) {
       if (quadHolder.length != 1) {
-        if (tripleHolder != 1) {
-          if (pairHolder == 3) {
+        if (tripleHolder.length < 1) {
+          if (pairHolder.length == 3) {
             translatedCombo.push("tri_pair");
           }
-          if (singleHolder == 6) {
+          if (singleHolder.length == 6) {
             translatedCombo.push("straight");
+          } else {
+            calculate1sAnd5s(singleHolder, translatedCombo);
           }
         } else {
-          if (tripleHolder == 2) {
+          if (tripleHolder.length == 2) {
             translatedCombo.push("two_tri");
           } else {
-            // account for different types number triples
+            // current method to add triple combos by value is most likely suboptimal
+            // do not want to think about a more efficent way right now
+            tripleHolder.forEach(index => {
+              switch (index) {
+                case 1:
+                  translatedCombo.push("tri_1");
+                  break;
+                case 2:
+                  translatedCombo.push("tri_2");
+                  break;
+                case 3:
+                  translatedCombo.push("tri_3");
+                  break;
+                case 4:
+                  translatedCombo.push("tri_4");
+                  break;
+                case 5:
+                  translatedCombo.push("tri_5");
+                  break;
+                case 6:
+                  translatedCombo.push("tri_6");
+                  break;
+              }
+            });
+
+            // add in 1 and 5 pairs
+            calculate1sAnd5s(pairHolder, translatedCombo);
           }
         }
       } else {
-        if (pairHolder == 1) {
+        if (pairHolder.length == 1) {
           translatedCombo.push("four_pair");
         } else {
           translatedCombo.push("four_kind");
@@ -130,8 +170,7 @@ function translateDieToCombos(arr) {
   } else {
     translatedCombo.push("six_kind");
   }
-
-
+  return translatedCombo;
 }
 
 function calculateComboScore(arr) {
