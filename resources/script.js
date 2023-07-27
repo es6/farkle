@@ -34,6 +34,7 @@ const COMBO_KEY = {
 let ROUND_SCORE = 0;
 let PLAYER_TOTAL_SCORE = 0;
 
+// Testing
 // score of 250
 let myRoll = [1, 1, 2, 5, 4];
 // score of 200
@@ -41,13 +42,96 @@ let myNextRoll = [1, 1];
 // total score of 450
 let myTotalRoundScore = 0;
 
-function roll() {
+function roll(numOfDie) {
   // randomly generate die rolls
+  let rolls = new Array;
+  for (i = 0; i < numOfDie; i++) {
+    rolls.push(Math.floor(Math.random() * 6) + 1);
+  }
+  return rolls;
 }
 
 function translateDieToCombos(arr) {
   // arr = [2,2,2,1,1,3]
   // output: ["tri_2",1,1]
+
+  let rollCount = {
+    1:0,
+    2:0,
+    3:0,
+    4:0,
+    5:0,
+    6:0
+  };
+
+  let translatedCombo = [];
+
+  let rollLength = arr.length;
+  arr.forEach(num => {
+    rollCount[num]++;
+  });
+  // returns {1: 1, 2:3, ...}
+
+  let singleHolder = [];
+  let pairHolder = [];
+  let tripleHolder = [];
+  let quadHolder = [];
+  let fiveHolder = [];
+  let sixHolder = [];
+  Object.keys(rollCount).forEach(key => {
+    switch (rollCount[key]) {
+      case 1:
+        singleHolder.push(rollCount[key]);
+      case 2:
+        pairHolder.push(rollCount[key]);
+        break;
+      case 3:
+        tripleHolder.push(rollCount[key]);
+        break;
+      case 4:
+        quadHolder.push(rollCount[key]);
+        break;
+      case 5:
+        fiveHolder.push(rollCount[key]);
+        break;
+      case 6:
+        sixHolder.push(rollCount[key]);
+        break;
+    }
+  });
+
+  if (sixHolder.length != 1) {
+    if (fiveHolder.length != 1) {
+      if (quadHolder.length != 1) {
+        if (tripleHolder != 1) {
+          if (pairHolder == 3) {
+            translatedCombo.push("tri_pair");
+          }
+          if (singleHolder == 6) {
+            translatedCombo.push("straight");
+          }
+        } else {
+          if (tripleHolder == 2) {
+            translatedCombo.push("two_tri");
+          } else {
+            // account for different types number triples
+          }
+        }
+      } else {
+        if (pairHolder == 1) {
+          translatedCombo.push("four_pair");
+        } else {
+          translatedCombo.push("four_kind");
+        }
+      }
+    } else {
+      translatedCombo.push("five_kind");
+    }
+  } else {
+    translatedCombo.push("six_kind");
+  }
+
+
 }
 
 function calculateComboScore(arr) {
