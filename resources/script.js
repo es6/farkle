@@ -122,7 +122,13 @@ function translateDieToCombos(arr) {
           if (singleHolder.length == 6) {
             translatedCombo.push("straight");
           } else {
-            calculate1sAnd5s(singleHolder, translatedCombo);
+            singleHolder.forEach(key => {
+              if (key == 1) {
+                translatedCombo.push(singleHolder[key]);
+              } else if (key == 5) {
+                translatedCombo.push(singleHolder[key]);
+              }
+            });
           }
         } else {
           if (tripleHolder.length == 2) {
@@ -132,29 +138,45 @@ function translateDieToCombos(arr) {
             // do not want to think about a more efficent way right now
             tripleHolder.forEach(index => {
               switch (index) {
-                case 1:
+                case '1':
                   translatedCombo.push("tri_1");
                   break;
-                case 2:
+                case '2':
                   translatedCombo.push("tri_2");
                   break;
-                case 3:
+                case '3':
                   translatedCombo.push("tri_3");
                   break;
-                case 4:
+                case '4':
                   translatedCombo.push("tri_4");
                   break;
-                case 5:
+                case '5':
                   translatedCombo.push("tri_5");
                   break;
-                case 6:
+                case '6':
                   translatedCombo.push("tri_6");
                   break;
               }
             });
+            pairHolder.forEach(key => {
+              if (key == 1) {
+                translatedCombo.push(1);
+                translatedCombo.push(1);
+              } else if (key == 5) {
+                translatedCombo.push(5);
+                translatedCombo.push(5);
+              }
+            });
 
-            // add in 1 and 5 pairs
-            calculate1sAnd5s(pairHolder, translatedCombo);
+            if (singleHolder.length > 0) {
+              singleHolder.forEach(element => {
+                if (element == 1) {
+                  translatedCombo.push(1);
+                } else if (element == 5) {
+                  translatedCombo.push(5);
+                }
+              });
+            }
           }
         }
       } else {
