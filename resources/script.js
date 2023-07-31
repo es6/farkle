@@ -52,16 +52,6 @@ function roll(numOfDie) {
   return rolls;
 }
 
-function calculate1sAnd5s (arr, translatedCombo) {
-  arr.forEach(index => {
-    if (index == 1) {
-      translatedCombo.push(1);
-    } else if (index == 5) {
-      translatedCombo.push(5);
-    }
-  });
-}
-
 function translateDieToCombos(arr) {
   // arr = [2,2,2,1,1,3]
   // output: ["tri_2",1,1]
